@@ -8,28 +8,34 @@
     html, body {
       margin: 0;
       padding: 0;
-      overflow: hidden;
+      height: 100vh;
+      width: 100%;
       font-family: 'Courier New', Courier, monospace;
       touch-action: manipulation;
       background: url('/mnt/data/sfondo.png') no-repeat center center;
       background-size: contain;
-      height: 100%;
-      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .container {
       width: 600px;
-      height: 1040px;
-      margin: auto;
-      position: relative;
-      color: black;
-      font-size: 20px;
-background-color: #ffffcc;
+      height: 90vh;
+      background-color: #ffffcc;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      align-items: center;
+      box-sizing: border-box;
+      padding: 10px;
     }
 
-    .button {
-      position: absolute;
-      top: 65px;
+    .header {
+      display: flex;
+      gap: 40px;
+    }
+    .header .button {
       padding: 5px 10px;
       font-size: 18px;
       background-color: white;
@@ -37,71 +43,44 @@ background-color: #ffffcc;
       cursor: pointer;
     }
 
-    #chapter1 { left: 120px; }
-    #chapter2 { left: 280px; }
-
-    .icon-row {
-      position: absolute;
-      top: 150px;
-      left: 130px;
-      font-size: 22px;
-      line-height: 1.85;
+    .setup-block {
+      display: flex;
+      justify-content: center; /* centra le colonne senza ampio spazio vuoto */
+      gap: 60px;               /* spazio ridotto e controllato */
     }
 
-    .result-row {
-      position: absolute;
-      top: 150px;
-      left: 155px;
+    .column {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
       font-size: 22px;
-      line-height: 1.85;
     }
 
-    .icon-row-right {
-      position: absolute;
-      top: 150px;
-      right: 270px;
-      font-size: 22px;
-      line-height: 1.85;
-      text-align: right;
-    }
-
-    .result-row-right {
-      position: absolute;
-      top: 150px;
-      right: 250px;
-      font-size: 22px;
-      line-height: 1.85;
-      text-align: left;
+    .row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
     .start-point {
-      position: absolute;
-      top: 440px;
-      width: 100%;
-      text-align: center;
       font-size: 22px;
+      text-align: center;
     }
 
     .dice-area {
-      position: absolute;
-      top: 500px;
-      width: 100%;
       text-align: center;
     }
-
-    .dice-box, .dice-box-2 {
+    .dice-box {
       width: 100px;
       height: 100px;
       background-color: white;
       border: 2px solid black;
       font-size: 40px;
-      text-align: center;
       line-height: 100px;
       cursor: pointer;
       display: inline-block;
       margin: 0 10px;
     }
-
     .presidio-button, .field-button {
       display: none;
       margin-top: 20px;
@@ -113,21 +92,31 @@ background-color: #ffffcc;
     }
   </style>
 </head>
-
 <body>
   <div class="container">
-    <button id="chapter1" class="button">Chapter I</button>
-    <button id="chapter2" class="button">Chapter II</button>
-
-    <div class="icon-row" id="iconLeft">
-      <div>♕</div><div>♔</div><div>♘</div><div>♗</div><div>♖</div><div>♙</div>
+    <div class="header">
+      <button id="chapter1" class="button">Chapter I</button>
+      <button id="chapter2" class="button">Chapter II</button>
     </div>
-    <div class="result-row" id="resultsLeft"></div>
 
-    <div class="icon-row-right" id="iconRight">
-      <div>📷</div><div>🔍</div><div>🔫</div><div>🌟</div><div>🔒</div><div>☠️</div>
+    <div class="setup-block">
+      <div class="column" id="leftBlock">
+        <div class="row"><div>♕</div><div id="leftVal0"></div></div>
+        <div class="row"><div>♔</div><div id="leftVal1"></div></div>
+        <div class="row"><div>♘</div><div id="leftVal2"></div></div>
+        <div class="row"><div>♗</div><div id="leftVal3"></div></div>
+        <div class="row"><div>♖</div><div id="leftVal4"></div></div>
+        <div class="row"><div>♙</div><div id="leftVal5"></div></div>
+      </div>
+      <div class="column" id="rightBlock" style="align-items: flex-end;">
+        <div class="row"><div>📷</div><div id="rightVal0"></div></div>
+        <div class="row"><div>🔍</div><div id="rightVal1"></div></div>
+        <div class="row"><div>🔫</div><div id="rightVal2"></div></div>
+        <div class="row"><div>🌟</div><div id="rightVal3"></div></div>
+        <div class="row"><div>🔒</div><div id="rightVal4"></div></div>
+        <div class="row"><div>☠️</div><div id="rightVal5"></div></div>
+      </div>
     </div>
-    <div class="result-row-right" id="resultsRight"></div>
 
     <div class="start-point" id="startPoint">Starting point: </div>
 
@@ -141,99 +130,80 @@ background-color: #ffffcc;
   </div>
 
   <script>
-    const getRandomCoord = () => `${Math.ceil(Math.random() * 6)}-${Math.ceil(Math.random() * 6)}`;
+    const getRandomCoord = () => `${Math.ceil(Math.random()*6)}-${Math.ceil(Math.random()*6)}`;
 
     const getValidCoords = () => {
       const coords = [];
       let tries = 0;
-
-      while (coords.length < 6 && tries < 1000) {
-        const y = Math.ceil(Math.random() * 6);
-        const x = Math.ceil(Math.random() * 6);
-        const newCoord = `${y}-${x}`;
-
-        const yCount = coords.filter(c => +c.split('-')[0] === y).length;
-        const xCount = coords.filter(c => +c.split('-')[1] === x).length;
-        const edgeCount = coords.reduce((acc, c) => {
-          const [cy, cx] = c.split('-').map(Number);
-          return acc + ((cy === 1 || cy === 6 || cx === 1 || cx === 6) ? 1 : 0);
+      while(coords.length < 6 && tries < 1000) {
+        const y = Math.ceil(Math.random()*6), x = Math.ceil(Math.random()*6);
+        const c = `${y}-${x}`;
+        const yCount = coords.filter(v => +v.split('-')[0] === y).length;
+        const xCount = coords.filter(v => +v.split('-')[1] === x).length;
+        const edgeCount = coords.reduce((a,v) => {
+          const [cy,cx] = v.split('-').map(Number);
+          return a + ((cy===1||cy===6||cx===1||cx===6) ? 1 : 0);
         }, 0);
-
-        if (!coords.includes(newCoord) && yCount < 2 && xCount < 2 && edgeCount < 3) {
-          coords.push(newCoord);
-        }
-
+        if(!coords.includes(c) && yCount < 2 && xCount < 2 && edgeCount < 3) coords.push(c);
         tries++;
       }
-
       return coords;
     };
 
-    const getUniqueNumbers = (min, max) => {
-      const numbers = [];
-      while (numbers.length < 6) {
-        const n = Math.floor(Math.random() * (max - min + 1)) + min;
-        if (!numbers.includes(n)) numbers.push(n);
+    const getUniqueNumbers = (min,max) => {
+      const nums = [];
+      while(nums.length < 6) {
+        const n = Math.floor(Math.random()*(max-min+1)) + min;
+        if(!nums.includes(n)) nums.push(n);
       }
-      return numbers;
+      return nums;
     };
 
-    const generateSetup = (chapter) => {
-      const resultsLeft = document.getElementById("resultsLeft");
-      const resultsRight = document.getElementById("resultsRight");
-      const startPoint = document.getElementById("startPoint");
-      const diceBox2 = document.getElementById("diceBox2");
-      const presidioButton = document.getElementById("presidioButton");
-      const fieldButton = document.getElementById("fieldButton");
+    const generateSetup = (ch) => {
+      const startP = document.getElementById('startPoint');
+      const d1 = document.getElementById('diceBox2');
+      const pb = document.getElementById('presidioButton');
+      const fb = document.getElementById('fieldButton');
 
-      let leftNumbers, rightNumbers;
-
-      if (chapter === 1) {
-        leftNumbers = getUniqueNumbers(4, 9);
-        rightNumbers = getUniqueNumbers(1, 6);
-        diceBox2.style.display = 'none';
-        presidioButton.style.display = 'none';
-        fieldButton.style.display = 'inline-block';
+      let ln, rn;
+      if(ch === 1) {
+        ln = getUniqueNumbers(4,9);
+        rn = getUniqueNumbers(1,6);
+        d1.style.display = 'none'; pb.style.display = 'none'; fb.style.display = 'inline-block';
       } else {
-        leftNumbers = getUniqueNumbers(1, 6);
-        rightNumbers = getUniqueNumbers(1, 6);
-        diceBox2.style.display = 'inline-block';
-        presidioButton.style.display = 'inline-block';
-        fieldButton.style.display = 'none';
+        ln = getUniqueNumbers(1,6);
+        rn = getUniqueNumbers(1,6);
+        d1.style.display = 'inline-block'; pb.style.display = 'inline-block'; fb.style.display = 'none';
       }
 
       let coords = [];
-      while (coords.length < 6) {
-        coords = getValidCoords();
-      }
+      while(coords.length < 6) coords = getValidCoords();
 
-      if (chapter === 1) {
-        const labels = ['Q', 'K', 'N', 'B', 'R', 'P'];
-        resultsLeft.innerHTML = leftNumbers.map((n, i) => `${labels[i]} ${n} (${coords[i]})`).join("<br>");
-      } else {
-        resultsLeft.innerHTML = leftNumbers.map(n => `${n}`).join("<br>");
-      }
+      let sp;
+      do { sp = getRandomCoord(); } while(coords.includes(sp));
 
-      resultsRight.innerHTML = rightNumbers.map(n => `${n}`).join("<br>");
-      startPoint.innerText = `Starting point: ${getRandomCoord()}`;
+      ln.forEach((v,i) => {
+        const el = document.getElementById(`leftVal${i}`);
+        const lab = ch===1 ? ['Q','K','N','B','R','P'][i] : '';
+        el.innerText = ch===1 ? `${lab} ${v} (${coords[i]})` : v;
+      });
+      rn.forEach((v,i) => document.getElementById(`rightVal${i}`).innerText = v);
+
+      startP.innerText = `Starting point: ${sp}`;
     };
 
-    const rollDice = () => Math.ceil(Math.random() * 6);
-
-    document.getElementById("chapter1").onclick = () => generateSetup(1);
-    document.getElementById("chapter2").onclick = () => generateSetup(2);
-
-    document.getElementById("presidioButton").onclick = () => {
-      document.getElementById("diceBox").innerText = rollDice();
-      document.getElementById("diceBox2").innerText = rollDice();
+    const rollDice = () => Math.ceil(Math.random()*6);
+    document.getElementById('chapter1').onclick = () => generateSetup(1);
+    document.getElementById('chapter2').onclick = () => generateSetup(2);
+    document.getElementById('presidioButton').onclick = () => {
+      document.getElementById('diceBox').innerText = rollDice();
+      document.getElementById('diceBox2').innerText = rollDice();
     };
-
-    document.getElementById("fieldButton").onclick = () => {
-      document.getElementById("diceBox").innerText = rollDice();
+    document.getElementById('fieldButton').onclick = () => {
+      document.getElementById('diceBox').innerText = rollDice();
     };
-
-    document.getElementById("diceBox").onclick = () => {
-      document.getElementById("diceBox").innerText = rollDice();
+    document.getElementById('diceBox').onclick = () => {
+      document.getElementById('diceBox').innerText = rollDice();
     };
   </script>
 </body>
