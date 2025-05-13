@@ -20,8 +20,8 @@
     }
 
     .container {
-      width: 100%;        /* piena larghezza su mobile */
-      max-width: 600px;   /* limite desktop */
+      width: 100%;
+      max-width: 600px;
       background-color: #ffffff;
       display: flex;
       flex-direction: column;
@@ -29,7 +29,6 @@
       box-sizing: border-box;
       padding: 10px;
       gap: 10px;
-      /* altezza automatica e scroll interno se necessario */
       max-height: 100vh;
       overflow-y: auto;
     }
@@ -37,15 +36,8 @@
     .title {
       text-align: center;
     }
-    .title h1 {
-      margin: 0;
-      font-size: 32px;
-    }
-    .title h2 {
-      margin: 0;
-      font-size: 18px;
-      font-weight: normal;
-    }
+    .title h1 { margin: 0; font-size: 32px; }
+    .title h2 { margin: 0; font-size: 18px; font-weight: normal; }
 
     .header {
       display: flex;
@@ -62,7 +54,7 @@
     .setup-block {
       display: flex;
       justify-content: center;
-      gap: 30px;               /* Riduce lo spazio tra le colonne */
+      gap: 30px;
     }
 
     .column {
@@ -78,14 +70,20 @@
       gap: 8px;
     }
 
+    .icon {
+      display: inline-block;
+      width: 1em;
+      height: 1em;
+      line-height: 1em;
+      text-align: center;
+    }
+
     .start-point {
       font-size: 22px;
       text-align: center;
     }
 
-    .dice-area {
-      text-align: center;
-    }
+    .dice-area { text-align: center; }
     .dice-box {
       width: 100px;
       height: 100px;
@@ -96,16 +94,7 @@
       cursor: pointer;
       display: inline-block;
       margin: 0 10px;
-      vertical-align: top;  /* Assicura allineamento uniforme dei dadi */
-      width: 100px;
-      height: 100px;
-      background-color: white;
-      border: 2px solid black;
-      font-size: 40px;
-      line-height: 100px;
-      cursor: pointer;
-      display: inline-block;
-      margin: 0 10px;
+      vertical-align: top;
     }
     .presidio-button, .field-button {
       display: none;
@@ -123,7 +112,7 @@
     <div class="title">
       <h1>CHESSCODE</h1>
       <h2>Setup Generator</h2>
-    </div>  
+    </div>
     <div class="header">
       <button id="chapter1" class="button">Chapter I</button>
       <button id="chapter2" class="button">Chapter II</button>
@@ -131,20 +120,20 @@
 
     <div class="setup-block">
       <div class="column" id="leftBlock">
-        <div class="row"><div>♕</div><div id="leftVal0"></div></div>
-        <div class="row"><div>♔</div><div id="leftVal1"></div></div>
-        <div class="row"><div>♘</div><div id="leftVal2"></div></div>
-        <div class="row"><div>♗</div><div id="leftVal3"></div></div>
-        <div class="row"><div>♖</div><div id="leftVal4"></div></div>
-        <div class="row"><div>♙</div><div id="leftVal5"></div></div>
+        <div class="row"><span class="icon">♕</span><div id="leftVal0"></div></div>
+        <div class="row"><span class="icon">♔</span><div id="leftVal1"></div></div>
+        <div class="row"><span class="icon">♘</span><div id="leftVal2"></div></div>
+        <div class="row"><span class="icon">♗</span><div id="leftVal3"></div></div>
+        <div class="row"><span class="icon">♖</span><div id="leftVal4"></div></div>
+        <div class="row"><span class="icon">♙</span><div id="leftVal5"></div></div>
       </div>
       <div class="column" id="rightBlock" style="align-items: flex-end;">
-        <div class="row"><div>📷</div><div id="rightVal0"></div></div>
-        <div class="row"><div>🔍</div><div id="rightVal1"></div></div>
-        <div class="row"><div>🔫</div><div id="rightVal2"></div></div>
-        <div class="row"><div>🌟</div><div id="rightVal3"></div></div>
-        <div class="row"><div>🔒</div><div id="rightVal4"></div></div>
-        <div class="row"><div>☠️</div><div id="rightVal5"></div></div>
+        <div class="row"><span class="icon">📷</span><div id="rightVal0"></div></div>
+        <div class="row"><span class="icon">🔍</span><div id="rightVal1"></div></div>
+        <div class="row"><span class="icon">🔫</span><div id="rightVal2"></div></div>
+        <div class="row"><span class="icon">🌟</span><div id="rightVal3"></div></div>
+        <div class="row"><span class="icon">🔒</span><div id="rightVal4"></div></div>
+        <div class="row"><span class="icon">☠️</span><div id="rightVal5"></div></div>
       </div>
     </div>
 
