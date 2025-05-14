@@ -50,7 +50,10 @@
       border: 2px solid black;
       cursor: pointer;
     }
-
+.header .button.active {
+  background-color: black;
+  color: white;
+}
     .setup-block {
       display: flex;
       justify-content: center;
@@ -112,8 +115,8 @@
   <img src="title.png" alt="Chesscode Setup Generator" width="232" height="auto">
 </div>
     <div class="header">
-      <button id="chapter1" class="button">Chapter I</button>
-      <button id="chapter2" class="button">Chapter II</button>
+      <button id="chapter1" class="button">Chapter 1</button>
+      <button id="chapter2" class="button">Chapter 2</button>
     </div>
 
     <div class="setup-block">
@@ -215,8 +218,20 @@
     };
 
     const rollDice = () => Math.ceil(Math.random()*6);
-    document.getElementById('chapter1').onclick = () => generateSetup(1);
-    document.getElementById('chapter2').onclick = () => generateSetup(2);
+document.getElementById('chapter1').onclick = () => {
+  setActiveChapter('chapter1');
+  generateSetup(1);
+};
+document.getElementById('chapter2').onclick = () => {
+  setActiveChapter('chapter2');
+  generateSetup(2);
+};
+
+function setActiveChapter(id) {
+  document.getElementById('chapter1').classList.remove('active');
+  document.getElementById('chapter2').classList.remove('active');
+  document.getElementById(id).classList.add('active');
+}
     document.getElementById('presidioButton').onclick = () => {
       document.getElementById('diceBox').innerText = rollDice();
       document.getElementById('diceBox2').innerText = rollDice();
