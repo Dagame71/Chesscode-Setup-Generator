@@ -215,6 +215,9 @@
       });
 
       startP.innerText = `Starting point: ${sp}`;
+// Reset dei dadi quando cambio capitolo
+document.getElementById('diceBox').innerText = '';
+document.getElementById('diceBox2').innerText = '';
     };
 
     const rollDice = () => Math.ceil(Math.random()*6);
