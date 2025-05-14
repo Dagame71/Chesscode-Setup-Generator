@@ -36,24 +36,26 @@
     .title {
       text-align: center;
     }
-    .title h1 { margin: 0; font-size: 32px; }
-    .title h2 { margin: 0; font-size: 18px; font-weight: normal; }
 
     .header {
       display: flex;
       gap: 40px;
     }
+
     .header .button {
       padding: 5px 10px;
       font-size: 18px;
       background-color: white;
       border: 2px solid black;
       cursor: pointer;
+ border-radius: 6px; /* aggiunto */
     }
-.header .button.active {
-  background-color: black;
-  color: white;
-}
+
+    .header .button.active {
+      background-color: black;
+      color: white;
+    }
+
     .setup-block {
       display: flex;
       justify-content: center;
@@ -84,7 +86,10 @@
       text-align: center;
     }
 
-    .dice-area { text-align: center; }
+    .dice-area {
+      text-align: center;
+    }
+
     .dice-box {
       width: 100px;
       height: 100px;
@@ -96,6 +101,13 @@
       display: inline-block;
       margin: 0 10px;
       vertical-align: top;
+      opacity: 1;
+      transition: opacity 0.2s ease;
+  border-radius: 6px; /* aggiunto */
+    }
+
+    .fade {
+      opacity: 0;
     }
 
     .presidio-button, .field-button {
@@ -106,14 +118,15 @@
       background-color: white;
       border: 2px solid black;
       cursor: pointer;
+  border-radius: 6px;
     }
   </style>
 </head>
 <body>
   <div class="container">
-   <div class="title">
-  <img src="title.png" alt="Chesscode Setup Generator" width="232" height="auto">
-</div>
+    <div class="title">
+      <img src="title.png" alt="Chesscode Setup Generator" width="232" height="auto">
+    </div>
     <div class="header">
       <button id="chapter1" class="button">Chapter 1</button>
       <button id="chapter2" class="button">Chapter 2</button>
@@ -139,14 +152,14 @@
       </div>
     </div>
 
-    <div class="start-point" id="startPoint">Starting point: </div>
+    <div class="start-point" id="startPoint">Operation Base: </div>
 
     <div class="dice-area">
-      <div class="dice-box" id="diceBox"></div>
-      <div class="dice-box" id="diceBox2" style="display:none;"></div>
+      <div class="dice-box" id="diceBox" style="display: none;"></div>
+      <div class="dice-box" id="diceBox2" style="display: none;"></div>
       <br>
       <button id="fieldButton" class="field-button">Field Event</button>
-      <button id="presidioButton" class="presidio-button">Presidio Nemico</button>
+      <button id="presidioButton" class="presidio-button">Enemy reaction</button>
     </div>
   </div>
 
@@ -183,6 +196,7 @@
     const generateSetup = (ch) => {
       const startP = document.getElementById('startPoint');
       const d1 = document.getElementById('diceBox2');
+      const d0 = document.getElementById('diceBox');
       const pb = document.getElementById('presidioButton');
       const fb = document.getElementById('fieldButton');
 
@@ -190,11 +204,17 @@
       if(ch === 1) {
         ln = getUniqueNumbers(4,9);
         rn = getUniqueNumbers(1,6);
-        d1.style.display = 'none'; pb.style.display = 'none'; fb.style.display = 'inline-block';
+        d1.style.display = 'none';
+        pb.style.display = 'none';
+        fb.style.display = 'inline-block';
+        d0.style.display = 'inline-block';
       } else {
         ln = getUniqueNumbers(1,6);
         rn = getUniqueNumbers(1,6);
-        d1.style.display = 'inline-block'; pb.style.display = 'inline-block'; fb.style.display = 'none';
+        d1.style.display = 'inline-block';
+        pb.style.display = 'inline-block';
+        fb.style.display = 'none';
+        d0.style.display = 'inline-block';
       }
 
       let coords = [];
@@ -214,36 +234,48 @@
         el.innerText = v;
       });
 
-      startP.innerText = `Starting point: ${sp}`;
-// Reset dei dadi quando cambio capitolo
-document.getElementById('diceBox').innerText = '';
-document.getElementById('diceBox2').innerText = '';
+      startP.innerText = `Operation Base: ${sp}`;
+      d0.innerText = '';
+      d1.innerText = '';
     };
 
     const rollDice = () => Math.ceil(Math.random()*6);
-document.getElementById('chapter1').onclick = () => {
-  setActiveChapter('chapter1');
-  generateSetup(1);
-};
-document.getElementById('chapter2').onclick = () => {
-  setActiveChapter('chapter2');
-  generateSetup(2);
-};
 
-function setActiveChapter(id) {
-  document.getElementById('chapter1').classList.remove('active');
-  document.getElementById('chapter2').classList.remove('active');
-  document.getElementById(id).classList.add('active');
-}
+    const fadeAndRoll = (box, valueFn) => {
+      box.classList.add('fade');
+      setTimeout(() => {
+        box.innerText = valueFn();
+        box.classList.remove('fade');
+      }, 200);
+    };
+
+    document.getElementById('chapter1').onclick = () => {
+      setActiveChapter('chapter1');
+      generateSetup(1);
+    };
+
+    document.getElementById('chapter2').onclick = () => {
+      setActiveChapter('chapter2');
+      generateSetup(2);
+    };
+
+    function setActiveChapter(id) {
+      document.getElementById('chapter1').classList.remove('active');
+      document.getElementById('chapter2').classList.remove('active');
+      document.getElementById(id).classList.add('active');
+    }
+
     document.getElementById('presidioButton').onclick = () => {
-      document.getElementById('diceBox').innerText = rollDice();
-      document.getElementById('diceBox2').innerText = rollDice();
+      fadeAndRoll(document.getElementById('diceBox'), rollDice);
+      fadeAndRoll(document.getElementById('diceBox2'), rollDice);
     };
+
     document.getElementById('fieldButton').onclick = () => {
-      document.getElementById('diceBox').innerText = rollDice();
+      fadeAndRoll(document.getElementById('diceBox'), rollDice);
     };
+
     document.getElementById('diceBox').onclick = () => {
-      document.getElementById('diceBox').innerText = rollDice();
+      fadeAndRoll(document.getElementById('diceBox'), rollDice);
     };
   </script>
 </body>
