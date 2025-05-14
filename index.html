@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Chesscode Setup Generator</title>
   <style>
     html, body {
@@ -71,11 +71,9 @@
     }
 
     .icon {
-      display: inline-block;
-      width: 1em;
-      height: 1em;
-      line-height: 1em;
-      text-align: center;
+      width: 22px;
+      height: 22px;
+      object-fit: contain;
     }
 
     .start-point {
@@ -96,6 +94,7 @@
       margin: 0 10px;
       vertical-align: top;
     }
+
     .presidio-button, .field-button {
       display: none;
       margin-top: 20px;
@@ -109,10 +108,9 @@
 </head>
 <body>
   <div class="container">
-    <div class="title">
-      <h1>CHESSCODE</h1>
-      <h2>Setup Generator</h2>
-    </div>
+   <div class="title">
+  <img src="title.png" alt="Chesscode Setup Generator" width="232" height="auto">
+</div>
     <div class="header">
       <button id="chapter1" class="button">Chapter I</button>
       <button id="chapter2" class="button">Chapter II</button>
@@ -120,20 +118,21 @@
 
     <div class="setup-block">
       <div class="column" id="leftBlock">
-        <div class="row"><span class="icon">♕</span><div id="leftVal0"></div></div>
-        <div class="row"><span class="icon">♔</span><div id="leftVal1"></div></div>
-        <div class="row"><span class="icon">♘</span><div id="leftVal2"></div></div>
-        <div class="row"><span class="icon">♗</span><div id="leftVal3"></div></div>
-        <div class="row"><span class="icon">♖</span><div id="leftVal4"></div></div>
-        <div class="row"><span class="icon">♙</span><div id="leftVal5"></div></div>
+        <div class="row"><img src="q.jpg" class="icon" alt="Q"><div id="leftVal0"></div></div>
+        <div class="row"><img src="k.jpg" class="icon" alt="K"><div id="leftVal1"></div></div>
+        <div class="row"><img src="n.jpg" class="icon" alt="N"><div id="leftVal2"></div></div>
+        <div class="row"><img src="b.jpg" class="icon" alt="B"><div id="leftVal3"></div></div>
+        <div class="row"><img src="r.jpg" class="icon" alt="R"><div id="leftVal4"></div></div>
+        <div class="row"><img src="p.jpg" class="icon" alt="P"><div id="leftVal5"></div></div>
       </div>
+
       <div class="column" id="rightBlock" style="align-items: flex-end;">
-        <div class="row"><span class="icon">📷</span><div id="rightVal0"></div></div>
-        <div class="row"><span class="icon">🔍</span><div id="rightVal1"></div></div>
-        <div class="row"><span class="icon">🔫</span><div id="rightVal2"></div></div>
-        <div class="row"><span class="icon">🌟</span><div id="rightVal3"></div></div>
-        <div class="row"><span class="icon">🔒</span><div id="rightVal4"></div></div>
-        <div class="row"><span class="icon">☠️</span><div id="rightVal5"></div></div>
+        <div class="row"><img src="camera.jpg" class="icon" alt="Camera"><div id="rightVal0"></div></div>
+        <div class="row"><img src="finger.jpg" class="icon" alt="Finger"><div id="rightVal1"></div></div>
+        <div class="row"><img src="gun.jpg" class="icon" alt="Gun"><div id="rightVal2"></div></div>
+        <div class="row"><img src="scope.jpg" class="icon" alt="Scope"><div id="rightVal3"></div></div>
+        <div class="row"><img src="folder.jpg" class="icon" alt="Folder"><div id="rightVal4"></div></div>
+        <div class="row"><img src="skull.jpg" class="icon" alt="Skull"><div id="rightVal5"></div></div>
       </div>
     </div>
 
@@ -206,7 +205,11 @@
         const lab = ch===1 ? ['Q','K','N','B','R','P'][i] : '';
         el.innerText = ch===1 ? `${lab} ${v} (${coords[i]})` : v;
       });
-      rn.forEach((v,i) => document.getElementById(`rightVal${i}`).innerText = v);
+
+      rn.forEach((v,i) => {
+        const el = document.getElementById(`rightVal${i}`);
+        el.innerText = v;
+      });
 
       startP.innerText = `Starting point: ${sp}`;
     };
