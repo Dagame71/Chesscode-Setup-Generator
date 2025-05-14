@@ -48,7 +48,7 @@
       background-color: white;
       border: 2px solid black;
       cursor: pointer;
- border-radius: 6px; /* aggiunto */
+      border-radius: 6px;
     }
 
     .header .button.active {
@@ -103,7 +103,7 @@
       vertical-align: top;
       opacity: 1;
       transition: opacity 0.2s ease;
-  border-radius: 6px; /* aggiunto */
+      border-radius: 6px;
     }
 
     .fade {
@@ -118,7 +118,7 @@
       background-color: white;
       border: 2px solid black;
       cursor: pointer;
-  border-radius: 6px;
+      border-radius: 6px;
     }
   </style>
 </head>
@@ -152,36 +152,52 @@
       </div>
     </div>
 
-    <div class="start-point" id="startPoint">Operation Base: </div>
+    <div class="start-point" id="startPoint">Starting point: </div>
 
     <div class="dice-area">
       <div class="dice-box" id="diceBox" style="display: none;"></div>
       <div class="dice-box" id="diceBox2" style="display: none;"></div>
       <br>
       <button id="fieldButton" class="field-button">Field Event</button>
-      <button id="presidioButton" class="presidio-button">Enemy reaction</button>
+      <button id="presidioButton" class="presidio-button">Presidio Nemico</button>
     </div>
   </div>
 
   <script>
     const getRandomCoord = () => `${Math.ceil(Math.random()*6)}-${Math.ceil(Math.random()*6)}`;
 
+    const getQuadrant = (y, x) => {
+      if (y <= 3 && x <= 3) return 1;
+      if (y <= 3 && x >= 4) return 2;
+      if (y >= 4 && x <= 3) return 3;
+      return 4;
+    };
+
     const getValidCoords = () => {
       const coords = [];
+      const quadrantCounts = { 1: 0, 2: 0, 3: 0, 4: 0 };
+      const maxPerQuadrant = 2;
+      const requiredPerQuadrant = 1;
+
       let tries = 0;
-      while(coords.length < 6 && tries < 1000) {
-        const y = Math.ceil(Math.random()*6), x = Math.ceil(Math.random()*6);
-        const c = `${y}-${x}`;
-        const yCount = coords.filter(v => +v.split('-')[0] === y).length;
-        const xCount = coords.filter(v => +v.split('-')[1] === x).length;
-        const edgeCount = coords.reduce((a,v) => {
-          const [cy,cx] = v.split('-').map(Number);
-          return a + ((cy===1||cy===6||cx===1||cx===6) ? 1 : 0);
-        }, 0);
-        if(!coords.includes(c) && yCount < 2 && xCount < 2 && edgeCount < 3) coords.push(c);
+      while (coords.length < 6 && tries < 5000) {
+        const y = Math.ceil(Math.random() * 6);
+        const x = Math.ceil(Math.random() * 6);
+        const coord = `${y}-${x}`;
+        const q = getQuadrant(y, x);
+
+        if (coords.includes(coord) || quadrantCounts[q] >= maxPerQuadrant) {
+          tries++;
+          continue;
+        }
+
+        coords.push(coord);
+        quadrantCounts[q]++;
         tries++;
       }
-      return coords;
+
+      const allQuadrantsPresent = Object.values(quadrantCounts).every(c => c >= requiredPerQuadrant);
+      return allQuadrantsPresent ? coords : getValidCoords();
     };
 
     const getUniqueNumbers = (min,max) => {
@@ -234,7 +250,7 @@
         el.innerText = v;
       });
 
-      startP.innerText = `Operation Base: ${sp}`;
+      startP.innerText = `Starting point: ${sp}`;
       d0.innerText = '';
       d1.innerText = '';
     };
